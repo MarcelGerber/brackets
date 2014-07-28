@@ -48,6 +48,8 @@ define(function (require, exports, module) {
      */
     var _searchBarTemplate = require("text!htmlContent/findreplace-bar.html");
     
+    var _dropdownEntry = require("text!htmlContent/find-bar-dropdown-entry.html");
+    
     /**
      * @constructor
      * Find Bar UI component, used for both single- and multi-file find/replace. This doesn't actually
@@ -223,6 +225,10 @@ define(function (require, exports, module) {
     FindBar.prototype.open = function () {
         var self = this;
         
+        function itemRenderer(item, index) {
+            return Mustache.render(_dropdownEntry, item);
+        }
+        
         // Normally, creating a new Find bar will simply cause the old one to close
         // automatically. This can cause timing issues because the focus change might
         // cause the new one to think it should close, too. So we simply explicitly
@@ -235,8 +241,13 @@ define(function (require, exports, module) {
         templateVars.replaceAllLabel = (templateVars.multifile ? Strings.BUTTON_REPLACE_ALL_IN_FILES : Strings.BUTTON_REPLACE_ALL);
         
         this._modalBar = new ModalBar(Mustache.render(_searchBarTemplate, templateVars), true);  // 2nd arg = auto-close on Esc/blur
-        var $root = this._modalBar.getRoot();
-        this._dropdown = new DropdownButton("", ["abc"]);
+        var $root           = this._modalBar.getRoot(),
+            dropdownEntries = [
+                {label: "None", id: "find-no-option"},
+                "---",
+                {label: Strings.BUTTON_REGEXP_HINT, id: "find-regexp"},
+                {label: Strings.BUTTON_WHOLE_WORD_HINT, id: "find-whole-word"}];
+        this._dropdown = new DropdownButton("", dropdownEntries, itemRenderer);
         $(this._dropdown.$button)
             .addClass("further-options no-focus")
             .attr("tabindex", "-1")

@@ -1188,7 +1188,7 @@ a, img {
         padding: 1px 5px;
     }
     .further-options {
-        height: 24px;
+        height: 28px;
         padding-right: 9px;
     }
     .button-icon {  // icons must be nested inside button so we can apply padding w/o tiling icon
@@ -1203,9 +1203,6 @@ a, img {
     }
     #find-case-sensitive.active .button-icon {
         .sprite-swap(0, 72px);
-    }
-    #find-whole-word .button-icon {
-        .sprite-swap(0, 96px);
     }
     #find-whole-word.active .button-icon {
         .sprite-swap(0, 120px);
@@ -1256,6 +1253,15 @@ a, img {
     #find-whole-word {
         margin-left: 0;
         border-radius: 0;
+    }
+}
+
+// Further options dropdown in Find Bar
+.find-options-dropdown-icon {
+    .sprite-icon(0, 0, 24px, 24px, "images/find-replace-sprites.svg");
+    background-repeat: no-repeat;
+    #find-whole-word & {
+        .sprite-swap(0, 96px);
     }
 }
 
