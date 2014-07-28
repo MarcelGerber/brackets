@@ -32,6 +32,7 @@ define(function (require, exports, module) {
     
     var _                  = require("thirdparty/lodash"),
         Commands           = require("command/Commands"),
+        DropdownButton     = require("widgets/DropdownButton").DropdownButton,
         EditorManager      = require("editor/EditorManager"),
         KeyBindingManager  = require("command/KeyBindingManager"),
         KeyEvent           = require("utils/KeyEvent"),
@@ -234,6 +235,12 @@ define(function (require, exports, module) {
         templateVars.replaceAllLabel = (templateVars.multifile ? Strings.BUTTON_REPLACE_ALL_IN_FILES : Strings.BUTTON_REPLACE_ALL);
         
         this._modalBar = new ModalBar(Mustache.render(_searchBarTemplate, templateVars), true);  // 2nd arg = auto-close on Esc/blur
+        var $root = this._modalBar.getRoot();
+        this._dropdown = new DropdownButton("", ["abc"]);
+        $(this._dropdown.$button)
+            .addClass("further-options no-focus")
+            .attr("tabindex", "-1")
+            .insertAfter($root.find("#find-case-sensitive"));
         
         // When the ModalBar closes, clean ourselves up.
         $(this._modalBar).on("close", function (event) {
@@ -247,8 +254,7 @@ define(function (require, exports, module) {
         });
         
         FindBar._addFindBar(this);
-        
-        var $root = this._modalBar.getRoot();
+
         $root
             .on("input", "#find-what", function () {
                 $(self).triggerHandler("queryChange");
