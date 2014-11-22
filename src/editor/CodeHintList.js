@@ -233,20 +233,17 @@ define(function (require, exports, module) {
                 $parent = $ul.parent();
             
             // remove list temporarily to save rendering time
-            $ul.remove().append(Mustache.render(CodeHintListHTML, view));
+            $ul.html(Mustache.render(CodeHintListHTML, view));
+            console.log(Date.now(), 1);
             
-            $ul.children("li").each(function (index, element) {
-                var hint        = self.hints[index],
-                    $element    = $(element);
-                
-                // store hint on each list item
-                $element.data("hint", hint);
-                
-                // insert jQuery hint objects after the template is rendered
-                if (hint.jquery) {
-                    $element.find(".codehint-item").append(hint);
+            var $children = $ul.find("li .codehint-item");
+            $children.append(function (index, currentHTML) {
+                if (currentHTML) { // non-jQuery hint
+                    return undefined;
                 }
+                return self.hints[index];
             });
+            console.log(Date.now(), 2);
             
             // delegate list item events to the top-level ul list element
             $ul.on("click", "li", function (e) {
@@ -254,9 +251,13 @@ define(function (require, exports, module) {
                 // hit the close handler in bootstrap-dropdown).
                 e.stopPropagation();
                 if (self.handleSelect) {
-                    self.handleSelect($(this).data("hint"));
+                    var $item = $(this).find(".codehint-item"),
+                        $children = self.$hintMenu.find("ul.dropdown-menu li .codehint-item");
+                    self.handleSelect(self.hints[$children.index($item)]);
+                    self.handleSelect = null;
                 }
             });
+            console.log(Date.now(), 3);
             
             // Lists with wide results require different formatting
             if (this.hints.handleWideResults) {
