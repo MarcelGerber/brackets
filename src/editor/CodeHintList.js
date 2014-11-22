@@ -251,9 +251,9 @@ define(function (require, exports, module) {
                 // hit the close handler in bootstrap-dropdown).
                 e.stopPropagation();
                 if (self.handleSelect) {
-                    var $item = $(this).find(".codehint-item"),
-                        $children = self.$hintMenu.find("ul.dropdown-menu li .codehint-item");
-                    self.handleSelect(self.hints[$children.index($item)]);
+                    var $this = $(this),
+                        $children = $this.parent().find("li");
+                    self.handleSelect(self.hints[$children.index($this)]);
                     self.handleSelect = null;
                 }
             });
@@ -279,6 +279,8 @@ define(function (require, exports, module) {
      * @return {{left: number, top: number, width: number}}
      */
     CodeHintList.prototype._calcHintListLocation = function () {
+        // NOTE: .outerHeight()/.outerWidth is faster than .height()/.width(), so use it whenever possible as this is performance-heavy code
+        console.log(Date.now(), 1);
         var cursor      = this.editor._codeMirror.cursorCoords(),
             posTop      = cursor.bottom,
             posLeft     = cursor.left,
@@ -286,25 +288,28 @@ define(function (require, exports, module) {
             $window     = $(window),
             $menuWindow = this.$hintMenu.children("ul"),
             menuHeight  = $menuWindow.outerHeight();
+        console.log(Date.now(), 2);
 
         // TODO Ty: factor out menu repositioning logic so code hints and Context menus share code
         // adjust positioning so menu is not clipped off bottom or right
-        var bottomOverhang = posTop + menuHeight - $window.height();
+        var bottomOverhang = posTop + menuHeight - $window.outerHeight();
         if (bottomOverhang > 0) {
             posTop -= (textHeight + 2 + menuHeight);
         }
 
         posTop -= 30;   // shift top for hidden parent element
+        console.log(Date.now(), 3);
         
         var menuWidth = $menuWindow.width();
         var availableWidth = menuWidth;
-        var rightOverhang = posLeft + menuWidth - $window.width();
+        var rightOverhang = posLeft + menuWidth - $window.outerWidth();
         if (rightOverhang > 0) {
             posLeft = Math.max(0, posLeft - rightOverhang);
         } else if (this.hints.handleWideResults) {
             // Right overhang is negative
             availableWidth = menuWidth + Math.abs(rightOverhang);
         }
+        console.log(Date.now(), 4);
 
         return {left: posLeft, top: posTop, width: availableWidth};
     };
