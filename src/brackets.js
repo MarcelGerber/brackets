@@ -450,6 +450,11 @@ define(function (require, exports, module) {
             }
             return real_windowOpen.apply(window, arguments);
         };
+
+        console.logTime = function () { // debugging function - console.log with timestamp
+            var timestamp = "[" + Date.now() + "]";
+            console.log.apply(this, [timestamp].concat(Array.prototype.slice.call(arguments)));
+        };
     }
     
     // Wait for view state to load.
