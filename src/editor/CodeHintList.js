@@ -234,7 +234,6 @@ define(function (require, exports, module) {
             
             // remove list temporarily to save rendering time
             $ul.html(Mustache.render(CodeHintListHTML, view));
-            console.log(Date.now(), 1);
             
             var $children = $ul.find("li .codehint-item");
             $children.append(function (index, currentHTML) {
@@ -243,7 +242,6 @@ define(function (require, exports, module) {
                 }
                 return self.hints[index];
             });
-            console.log(Date.now(), 2);
             
             // delegate list item events to the top-level ul list element
             $ul.on("click", "li", function (e) {
@@ -257,7 +255,6 @@ define(function (require, exports, module) {
                     self.handleSelect = null;
                 }
             });
-            console.log(Date.now(), 3);
             
             // Lists with wide results require different formatting
             if (this.hints.handleWideResults) {
@@ -280,15 +277,20 @@ define(function (require, exports, module) {
      */
     CodeHintList.prototype._calcHintListLocation = function () {
         // NOTE: .outerHeight()/.outerWidth is faster than .height()/.width(), so use it whenever possible as this is performance-heavy code
-        console.log(Date.now(), 1);
-        var cursor      = this.editor._codeMirror.cursorCoords(),
-            posTop      = cursor.bottom,
-            posLeft     = cursor.left,
-            textHeight  = this.editor.getTextHeight(),
-            $window     = $(window),
-            $menuWindow = this.$hintMenu.children("ul"),
-            menuHeight  = $menuWindow.outerHeight();
-        console.log(Date.now(), 2);
+        console.logTime(1);
+        var cursor      = this.editor._codeMirror.cursorCoords();
+        console.logTime(1.1);
+        var posTop      = cursor.bottom;
+        var posLeft     = cursor.left;
+        console.logTime(1.2);
+        var textHeight  = this.editor.getTextHeight();
+        console.logTime(1.3);
+        var $window     = $(window);
+        console.logTime(1.4);
+        var $menuWindow = this.$hintMenu.children("ul");
+        console.logTime(1.5);
+        var menuHeight  = Math.min(8, this.hints.length) * (textHeight + 3) + 2;
+        console.logTime(2, menuHeight);
 
         // TODO Ty: factor out menu repositioning logic so code hints and Context menus share code
         // adjust positioning so menu is not clipped off bottom or right
@@ -298,18 +300,23 @@ define(function (require, exports, module) {
         }
 
         posTop -= 30;   // shift top for hidden parent element
-        console.log(Date.now(), 3);
+        console.logTime(3);
         
         var menuWidth = $menuWindow.width();
+        console.logTime(3.1, menuWidth);
         var availableWidth = menuWidth;
+        console.logTime(3.2);
         var rightOverhang = posLeft + menuWidth - $window.outerWidth();
+        console.logTime(3.3);
         if (rightOverhang > 0) {
             posLeft = Math.max(0, posLeft - rightOverhang);
+            console.logTime(3.4);
         } else if (this.hints.handleWideResults) {
             // Right overhang is negative
             availableWidth = menuWidth + Math.abs(rightOverhang);
+            console.logTime(3.5);
         }
-        console.log(Date.now(), 4);
+        console.logTime(4);
 
         return {left: posLeft, top: posTop, width: availableWidth};
     };
