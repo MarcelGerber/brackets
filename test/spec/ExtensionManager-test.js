@@ -159,20 +159,20 @@ define(function (require, exports, module) {
         }
         
         function setupExtensionManagerViewTests(context) {
-            context.addMatchers({
-                toHaveText: function (expected) {
+            jasmine.addMatchers({
+                toHaveText: function (actual, expected) {
                     var notText = this.isNot ? " not" : "";
                     this.message = function () {
                         return "Expected view" + notText + " to contain text " + expected;
                     };
-                    return SpecRunnerUtils.findDOMText(this.actual.$el, expected);
+                    return SpecRunnerUtils.findDOMText(actual.$el, expected);
                 },
-                toHaveLink: function (expected) {
+                toHaveLink: function (actual, expected) {
                     var notText = this.isNot ? " not" : "";
                     this.message = function () {
                         return "Expected view" + notText + " to contain link " + expected;
                     };
-                    return SpecRunnerUtils.findDOMText(this.actual.$el, expected, true);
+                    return SpecRunnerUtils.findDOMText(actual.$el, expected, true);
                 }
             });
             spyOn(InstallExtensionDialog, "installUsingDialog").andCallFake(function (url) {

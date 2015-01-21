@@ -40,7 +40,7 @@ define(function (require, exports, module) {
         unknown:    {mode: null,            langName: "Text"}
     };
     
-    function compareMode(expected, actual) {
+    function compareMode(actual, expected) {
         if (typeof actual === "string") {
             return actual === expected;
         } else if (actual === null) {
@@ -67,10 +67,8 @@ define(function (require, exports, module) {
         }
         
         beforeEach(function () {
-            this.addMatchers({
-                toSpecifyModeNamed: function (expected) {
-                    return compareMode(expected, this.actual);
-                }
+            jasmine.addMatchers({
+                toSpecifyModeNamed: compareMode
             });
         });
 

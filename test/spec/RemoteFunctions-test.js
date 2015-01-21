@@ -22,7 +22,7 @@
  */
 
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50, evil: true */
-/*global $, define, describe, it, xit, expect, beforeEach, afterEach, window */
+/*global $, define, describe, it, xit, expect, beforeEach, afterEach, window, jasmine */
 
 define(function (require, exports, module) {
     'use strict';
@@ -113,7 +113,7 @@ define(function (require, exports, module) {
                 htmlDocument = window.document.implementation.createHTMLDocument();
                 editHandler = new RemoteFunctions.DOMEditHandler(htmlDocument);
                 
-                this.addMatchers({
+                jasmine.addMatchers({
                     toHaveEdit: function (edit, parentClone, ignoreParent) {
                         var msgArray    = [],
                             target      = getTargetElement(edit),

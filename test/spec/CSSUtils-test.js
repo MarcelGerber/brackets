@@ -22,7 +22,7 @@
  */
 
 /*jslint vars: true, plusplus: true, devel: true, browser: true, nomen: true, indent: 4, maxerr: 50 */
-/*global define, describe, it, expect, beforeEach, afterEach, waitsForDone, runs, beforeFirst, afterLast */
+/*global define, describe, it, expect, beforeEach, afterEach, waitsForDone, runs, beforeFirst, afterLast, jasmine */
 
 define(function (require, exports, module) {
     "use strict";
@@ -66,15 +66,15 @@ define(function (require, exports, module) {
      * the larger selector group or the smaller rightmost-simple-selector. E.g. if some rule
      * "div, foo .bar { ... }" matches a search for ".bar", the selector will be "foo .bar"
      */
-    var toMatchSelector = function (expected) {
-        return this.actual.selector.trim() === expected;
+    var toMatchSelector = function (actual, expected) {
+        return actual.selector.trim() === expected;
     };
     
     function init(spec, fileEntry) {
         spec.fileContent = null;
         
         if (fileEntry) {
-            spec.addMatchers({toMatchSelector: toMatchSelector});
+            jasmine.addMatchers({toMatchSelector: toMatchSelector});
 
             runs(function () {
                 var promise = FileUtils.readAsText(fileEntry)

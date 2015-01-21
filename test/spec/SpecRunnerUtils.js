@@ -1291,7 +1291,7 @@ define(function (require, exports, module) {
     
     // "global" custom matchers
     beforeEach(function () {
-        this.addMatchers({
+        jasmine.addMatchers({
             /**
              * Expects the given editor's selection to be a cursor at the given position (no range selected)
              */

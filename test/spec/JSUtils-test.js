@@ -23,7 +23,7 @@
 
 
 /*jslint vars: true, plusplus: true, devel: true, browser: true, nomen: true, indent: 4, maxerr: 50 */
-/*global define, describe, it, xit, expect, beforeEach, afterEach, waitsFor, runs, $, waitsForDone */
+/*global define, describe, it, xit, expect, beforeEach, afterEach, waitsFor, runs, $, waitsForDone, jasmine */
 
 define(function (require, exports, module) {
     'use strict';
@@ -57,7 +57,7 @@ define(function (require, exports, module) {
 
     function init(spec, fileEntry) {
         if (fileEntry) {
-            spec.addMatchers({toMatchFunctionName: toMatchFunctionName});
+            jasmine.addMatchers({toMatchFunctionName: toMatchFunctionName});
             
             runs(function () {
                 FileUtils.readAsText(fileEntry)

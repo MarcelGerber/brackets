@@ -23,7 +23,7 @@
 
 
 /*jslint vars: true, plusplus: true, devel: true, browser: true, nomen: true, indent: 4, maxerr: 50 */
-/*global define, describe, it, xit, expect, beforeEach, afterEach, waits, waitsFor, waitsForDone, waitsForFail, runs, $, beforeFirst, afterLast */
+/*global define, describe, it, xit, expect, beforeEach, afterEach, waits, waitsFor, waitsForDone, waitsForFail, runs, $, beforeFirst, afterLast, jasmine */
 
 define(function (require, exports, module) {
     'use strict';
@@ -236,7 +236,7 @@ define(function (require, exports, module) {
             });
             
             beforeEach(function () {
-                this.addMatchers({
+                jasmine.addMatchers({
                     toHaveInlineEditorRange: function (range) {
                         var i = 0,
                             editor = this.actual,

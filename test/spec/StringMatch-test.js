@@ -813,7 +813,7 @@ define(function (require, exports, module) {
         
         describe("StringMatcher", function () {
             beforeEach(function () {
-                this.addMatchers({
+                jasmine.addMatchers({
                     toBeInCache: function (matcher, cacheName) {
                         var value = matcher[cacheName][this.actual];
                         var notText = this.isNot ? " not" : "";
