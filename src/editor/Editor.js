@@ -23,7 +23,7 @@
 
 
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
-/*global define, $, window */
+/*global define, $, window, brackets */
 
 /**
  * Editor is a 1-to-1 wrapper for a CodeMirror editor instance. It layers on Brackets-specific
@@ -310,8 +310,8 @@ define(function (require, exports, module) {
         this._codeMirror = new CodeMirror(container, {
             autoCloseBrackets           : currentOptions[CLOSE_BRACKETS],
             autoCloseTags               : currentOptions[CLOSE_TAGS],
-            coverGutterNextToScrollbar  : true,
             cursorScrollMargin          : 3,
+            coverGutterNextToScrollbar  : true,
             dragDrop                    : currentOptions[DRAG_DROP],
             electricChars               : false,   // we use our own impl of this to avoid CodeMirror bugs; see _checkElectricChars()
             extraKeys                   : codeMirrorKeyMap,
@@ -322,8 +322,9 @@ define(function (require, exports, module) {
             lineWrapping                : currentOptions[WORD_WRAP],
             matchBrackets               : { maxScanLineLength: 50000, maxScanLines: 1000 },
             matchTags                   : { bothTags: true },
-            showCursorWhenSelecting     : currentOptions[SHOW_CURSOR_SELECT],
             scrollPastEnd               : !range && currentOptions[SCROLL_PAST_END],
+            selectionPointer            : currentOptions[DRAG_DROP] && brackets.platform !== "mac",
+            showCursorWhenSelecting     : currentOptions[SHOW_CURSOR_SELECT],
             smartIndent                 : currentOptions[SMART_INDENT],
             styleActiveLine             : currentOptions[STYLE_ACTIVE_LINE],
             tabSize                     : currentOptions[TAB_SIZE]
@@ -2205,14 +2206,9 @@ define(function (require, exports, module) {
         if (oldValue !== newValue) {
             this._currentOptions[prefName] = newValue;
             
-            if (prefName === USE_TAB_CHAR) {
+            if (prefName === DRAG_DROP) {
                 this._codeMirror.setOption(cmOptions[prefName], newValue);
-                this._codeMirror.setOption("indentUnit", newValue === true ?
-                                           this._currentOptions[TAB_SIZE] :
-                                           this._currentOptions[SPACE_UNITS]
-                                          );
-            } else if (prefName === STYLE_ACTIVE_LINE) {
-                this._updateStyleActiveLine();
+                this._codeMirror.setOption("selectionPointer", newValue && brackets.platform !== "mac");
             } else if (prefName === SCROLL_PAST_END && this._visibleRange) {
                 // Do not apply this option to inline editors
                 return;
@@ -2220,6 +2216,14 @@ define(function (require, exports, module) {
                 Editor._toggleLinePadding(!newValue);
                 this._codeMirror.setOption(cmOptions[SHOW_LINE_NUMBERS], newValue);
                 this.refreshAll();
+            } else if (prefName === STYLE_ACTIVE_LINE) {
+                this._updateStyleActiveLine();
+            } else if (prefName === USE_TAB_CHAR) {
+                this._codeMirror.setOption(cmOptions[prefName], newValue);
+                this._codeMirror.setOption("indentUnit", newValue === true ?
+                                           this._currentOptions[TAB_SIZE] :
+                                           this._currentOptions[SPACE_UNITS]
+                                          );
             } else {
                 this._codeMirror.setOption(cmOptions[prefName], newValue);
             }

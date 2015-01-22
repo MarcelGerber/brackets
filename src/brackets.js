@@ -54,6 +54,7 @@ define(function (require, exports, module) {
     require("thirdparty/CodeMirror2/addon/scroll/scrollpastend");
     require("thirdparty/CodeMirror2/addon/selection/active-line");
     require("thirdparty/CodeMirror2/addon/selection/mark-selection");
+    require("thirdparty/CodeMirror2/addon/selection/selection-pointer");
     require("thirdparty/CodeMirror2/addon/mode/multiplex");
     require("thirdparty/CodeMirror2/addon/mode/overlay");
     require("thirdparty/CodeMirror2/addon/search/match-highlighter");
